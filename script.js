@@ -19,7 +19,7 @@ function getComputerChoice() {
   return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function playRound(round, playerSelection, computerSelection) {
+function playRound(playerSelection, computerSelection) {
   let formattedInput = playerSelection.toLowerCase();
   if (!choices.includes(formattedInput)) {
     return new Error("Invalid input!");
@@ -27,28 +27,32 @@ function playRound(round, playerSelection, computerSelection) {
     const query = `${formattedInput}|${computerSelection}`;
     // doesn't contain query -> draw
     if (!relationMap.has(query)) {
-      return `Round ${round}: Draw!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
+      return `Draw!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
     }
     // contains query -> win or lose
     else {
       if (relationMap.get(query)) {
-        return `Round ${round}:Win!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
+        return `Win!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
       } else {
-        return `Round ${round}:Lose!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
+        return `Lose!\nYour selection: ${formattedInput}, Computer's Selection: ${computerSelection}`;
       }
     }
   }
 }
 
-function playGame() {
-  let playNumber = 5;
+const btns = document.querySelectorAll(".btn");
 
-  for (let round = 1; round <= playNumber; round++) {
-    const playerSelection = prompt("Your input (rock | paper | scissors):");
-    const computerSelection = getComputerChoice();
+const container = document.querySelector(".container");
+const div = document.createElement("div");
+div.classList.add("result-display");
 
-    console.log(playRound(round, playerSelection, computerSelection));
-  }
-}
+container.appendChild(div);
 
-playGame();
+btns.forEach((btn) => {
+  let text = btn.id;
+
+  btn.addEventListener(
+    "click",
+    () => (div.textContent = playRound(text, getComputerChoice()))
+  );
+});
